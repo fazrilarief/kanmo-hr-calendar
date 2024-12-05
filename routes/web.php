@@ -14,7 +14,7 @@
     use App\Http\Controllers\BotController;
 
     // Login Admin
-    Route::get('/login', [AuthController::class, 'login_form'])->name('login.form');
+    Route::get('/', [AuthController::class, 'login_form'])->name('login.form');
     Route::post('/hr-calendar/login', [AuthController::class, 'login_admin'])->name('login.admin');
     Route::post('/hr-calendar/logout', [AuthController::class, 'logout_admin'])->name('logout.admin');
 
