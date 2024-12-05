@@ -12,14 +12,18 @@
     use Illuminate\Support\Facades\Route;
 
     use App\Http\Controllers\BotController;
+    use App\Http\Controllers\HomeController;
+
+    // Default Home
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
     // Login Admin
-    Route::get('/', [AuthController::class, 'login_form'])->name('login.form');
+    Route::get('/login', [AuthController::class, 'login_form'])->name('login.form');
     Route::post('/hr-calendar/login', [AuthController::class, 'login_admin'])->name('login.admin');
     Route::post('/hr-calendar/logout', [AuthController::class, 'logout_admin'])->name('logout.admin');
 
     // Bot chat
-    Route::get('/', [BotController::class, 'showForm'])->name('showForm');
+    Route::get('/cahtbot', [BotController::class, 'showForm'])->name('showForm');
     Route::post('/saveUserAndQuestion', [BotController::class, 'saveUserAndQuestion'])->name('saveUserAndQuestion');
     Route::post('/saveUserAndQuestionAnother', [BotController::class, 'saveUserAndQuestionAnother'])->name('saveUserAndQuestionAnother');
     Route::get('/getChatHistory', [BotController::class, 'getChatHistory'])->name('getChatHistory');
