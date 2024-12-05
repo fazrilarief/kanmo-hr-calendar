@@ -28,10 +28,20 @@ class AdminHrCalendarController extends Controller
         $startYear = $request->input('startYear', 2024);
         $endYear = $request->input('endYear', 2025);
 
-        // Filter data berdasarkan tahun
-        $activities = KeyActivity::with(['subActivities', 'dateRanges' => function ($query) use ($startYear, $endYear) {
-            $query->whereYear('start_date', '>=', $startYear)
-                ->whereYear('end_date', '<=', $endYear);
+        // Buat filter tanggal berdasarkan awal dan akhir tahun
+        $startDateFilter = Carbon::createFromDate($startYear, 1, 1)->startOfDay();
+        $endDateFilter = Carbon::createFromDate($endYear, 12, 31)->endOfDay();
+
+        // Filter data berdasarkan rentang tanggal
+        $activities = KeyActivity::with(['subActivities', 'dateRanges' => function ($query) use ($startDateFilter, $endDateFilter) {
+            $query->where(function ($subQuery) use ($startDateFilter, $endDateFilter) {
+                $subQuery->whereBetween('start_date', [$startDateFilter, $endDateFilter])
+                    ->orWhereBetween('end_date', [$startDateFilter, $endDateFilter])
+                    ->orWhere(function ($overlapQuery) use ($startDateFilter, $endDateFilter) {
+                        $overlapQuery->where('start_date', '<=', $endDateFilter)
+                            ->where('end_date', '>=', $startDateFilter);
+                    });
+            });
         }])->get();
 
         // Buat array bulan untuk header tabel
@@ -45,7 +55,6 @@ class AdminHrCalendarController extends Controller
         // Kirim data ke view
         return view('admin.calendar.list.index', compact('months', 'activities', 'startYear', 'endYear'));
     }
-
 
     public function add_list()
     {

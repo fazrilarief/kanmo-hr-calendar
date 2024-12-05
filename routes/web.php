@@ -14,9 +14,9 @@
     use App\Http\Controllers\BotController;
 
     // Login Admin
-    Route::get('/bot-chat/admin', [AuthController::class, 'login_form'])->name('login.form');
-    Route::post('/bot-chat/admin/login', [AuthController::class, 'login_admin'])->name('login.admin');
-    Route::post('/bot-chat/admin/logout', [AuthController::class, 'logout_admin'])->name('logout.admin');
+    Route::get('/login', [AuthController::class, 'login_form'])->name('login.form');
+    Route::post('/hr-calendar/login', [AuthController::class, 'login_admin'])->name('login.admin');
+    Route::post('/hr-calendar/logout', [AuthController::class, 'logout_admin'])->name('logout.admin');
 
     // Bot chat
     Route::get('/', [BotController::class, 'showForm'])->name('showForm');
@@ -89,7 +89,7 @@
 
         // HR Calendar
         Route::get('/hr-calendar/list', [AdminHrCalendarController::class, 'index_list'])->name('admin.hr.calendar.index.list');
-        Route::post('/hr-calendar/filter', [AdminHrCalendarController::class, 'filter'])->name('admin.hr.calendar.filter');
+        Route::post('/hr-calendar/list', [AdminHrCalendarController::class, 'filter'])->name('admin.hr.calendar.filter');
 
 
         Route::get('/hr-calendar/list/add', [AdminHrCalendarController::class, 'add_list'])->name('admin.hr.calendar.add.list');

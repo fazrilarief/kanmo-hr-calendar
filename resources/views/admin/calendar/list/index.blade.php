@@ -129,7 +129,7 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>
                                     <form action="{{ route('admin.hr.calendar.delete.list', $activity->id) }}"
-                                        method="post">
+                                        method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-default btn-sm btn-outline"
@@ -162,34 +162,37 @@
                                         $currentMonth = Carbon\Carbon::createFromFormat('F Y', $month)->startOfMonth();
                                         $isHighlighted = false;
                                         $statusText = '';
-                                        $displayDates = collect();
+                                        $displayDate = '';
 
                                         foreach ($activity->dateRanges as $dateRange) {
                                             $startDate = Carbon\Carbon::parse($dateRange->start_date);
                                             $endDate = Carbon\Carbon::parse($dateRange->end_date);
 
-                                            if ($startDate->lte($currentMonth) && $endDate->gte($currentMonth)) {
+                                            // Jika bulan termasuk dalam rentang tanggal
+                                            if (
+                                                $startDate->lte($currentMonth->endOfMonth()) &&
+                                                $endDate->gte($currentMonth->startOfMonth())
+                                            ) {
                                                 $isHighlighted = true;
+
                                                 if ($currentMonth->isCurrentMonth() || $currentMonth->isFuture()) {
                                                     $statusText = 'Ongoing';
                                                 } elseif ($currentMonth->isPast()) {
                                                     $statusText = 'Done';
                                                 }
+
+                                                // Tampilkan hanya tanggal pada bulan tersebut
                                                 if ($startDate->format('F Y') === $month) {
-                                                    $displayDates->push($startDate->format('d'));
-                                                }
-                                                if ($endDate->format('F Y') === $month) {
-                                                    $displayDates->push($endDate->format('d'));
+                                                    $displayDate = $startDate->format('d');
+                                                } elseif ($endDate->format('F Y') === $month) {
+                                                    $displayDate = $endDate->format('d');
                                                 }
                                             }
                                         }
-
-                                        $distinctDisplayDates = $displayDates->unique()->sort()->values();
-                                        $displayText = $distinctDisplayDates->implode(' - ') . '<br>' . $statusText;
                                     @endphp
                                     <td class="{{ $isHighlighted ? 'highlight' : '' }} text-center"
                                         data-status="{{ $statusText }}">
-                                        {!! $displayText !!}
+                                        {!! $displayDate !!} <br> {{ $statusText }}
                                     </td>
                                 @endforeach
                             </tr>
