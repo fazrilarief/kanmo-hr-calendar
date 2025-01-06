@@ -204,90 +204,89 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var currentMonthIndex = (new Date()).getMonth() + 1;
-            var isHidden = false; // Default ke unhide
-            var cells = document.querySelectorAll('td[data-status]');
-            var headers = document.querySelectorAll('th.text-center');
-            var unhideButton = document.getElementById('unhideMonths');
-            var filterDropdown = document.getElementById('statusFilter');
-            var startYearSelect = document.getElementById('startYear'); // Referensi dropdown startYear
-            var endYearSelect = document.getElementById('endYear'); // Referensi dropdown endYear
+        var currentMonthIndex = (new Date()).getMonth() + 1; // Index bulan berjalan
+        var isHidden = true; // Default diatur ke 'hide'
+        var cells = document.querySelectorAll('td[data-status]');
+        var headers = document.querySelectorAll('th.text-center');
+        var unhideButton = document.getElementById('unhideMonths');
+        var filterDropdown = document.getElementById('statusFilter');
+        var startYearSelect = document.getElementById('startYear');
+        var endYearSelect = document.getElementById('endYear');
 
-            // Fungsi untuk menyembunyikan bulan
-            function hideMonths() {
-                cells.forEach(function(cell, index) {
-                    if (index % 13 < currentMonthIndex) {
-                        cell.style.display = 'none';
-                    }
-                });
-                headers.forEach(function(header, index) {
-                    if (index % 13 < currentMonthIndex) {
-                        header.style.display = 'none';
-                    }
-                });
-                isHidden = true;
-            }
-
-            // Fungsi untuk menampilkan bulan
-            function unhideMonths() {
-                cells.forEach(function(cell) {
-                    cell.style.display = '';
-                });
-                headers.forEach(function(header) {
-                    header.style.display = '';
-                });
-                isHidden = false;
-            }
-
-            // Fungsi untuk memfilter status
-            function filterStatus() {
-                var selectedStatus = filterDropdown.value;
-                cells.forEach(function(cell) {
-                    if (selectedStatus === '' || cell.getAttribute('data-status') === selectedStatus) {
-                        cell.style.display = '';
-                    } else {
-                        cell.style.display = 'none';
-                    }
-                });
-            }
-
-            // Fungsi untuk memperbarui opsi endYear
-            function updateEndYearOptions() {
-                const startYear = parseInt(startYearSelect.value, 10);
-
-                // Reset endYear options
-                Array.from(endYearSelect.options).forEach(option => {
-                    option.disabled = parseInt(option.value, 10) < startYear;
-                });
-
-                // Pastikan nilai yang dipilih valid
-                if (parseInt(endYearSelect.value, 10) < startYear) {
-                    endYearSelect.value = startYear;
-                }
-            }
-
-            // Default behavior: Unhide months
-            unhideMonths(); // Semua bulan ditampilkan secara default
-            unhideButton.textContent = 'Hide Months'; // Ubah teks tombol ke 'Hide Months'
-
-            unhideButton.addEventListener('click', function() {
-                if (isHidden) {
-                    unhideMonths();
-                    this.textContent = 'Hide Months';
-                } else {
-                    hideMonths();
-                    this.textContent = 'Unhide Months';
+        // Fungsi untuk menyembunyikan bulan yang sudah lewat
+        function hideMonths() {
+            cells.forEach(function(cell, index) {
+                var cellMonthIndex = index % 13; // Sesuaikan dengan jumlah kolom per baris
+                if (cellMonthIndex < currentMonthIndex) {
+                    cell.style.display = 'none';
                 }
             });
+            headers.forEach(function(header, index) {
+                var headerMonthIndex = index % 13; // Sesuaikan dengan jumlah kolom per header
+                if (headerMonthIndex < currentMonthIndex) {
+                    header.style.display = 'none';
+                }
+            });
+            isHidden = true;
+        }
 
-            filterDropdown.addEventListener('change', filterStatus);
+        // Fungsi untuk menampilkan semua bulan
+        function unhideMonths() {
+            cells.forEach(function(cell) {
+                cell.style.display = '';
+            });
+            headers.forEach(function(header) {
+                header.style.display = '';
+            });
+            isHidden = false;
+        }
 
-            // Update opsi endYear saat startYear berubah
-            startYearSelect.addEventListener('change', updateEndYearOptions);
+        // Fungsi untuk memfilter status
+        function filterStatus() {
+            var selectedStatus = filterDropdown.value;
+            cells.forEach(function(cell) {
+                if (selectedStatus === '' || cell.getAttribute('data-status') === selectedStatus) {
+                    cell.style.display = '';
+                } else {
+                    cell.style.display = 'none';
+                }
+            });
+        }
 
-            // Update opsi endYear saat halaman dimuat
-            updateEndYearOptions();
+        // Fungsi untuk memperbarui opsi endYear
+        function updateEndYearOptions() {
+            const startYear = parseInt(startYearSelect.value, 10);
+
+            // Reset endYear options
+            Array.from(endYearSelect.options).forEach(option => {
+                option.disabled = parseInt(option.value, 10) < startYear;
+            });
+
+            // Pastikan nilai yang dipilih valid
+            if (parseInt(endYearSelect.value, 10) < startYear) {
+                endYearSelect.value = startYear;
+            }
+        }
+
+        // Default behavior: Hide months saat halaman dimuat
+        hideMonths(); // Sembunyikan bulan yang sudah lewat secara default
+        unhideButton.textContent = 'Unhide Months'; // Atur teks tombol ke 'Unhide Months'
+
+        // Event listener untuk tombol hide/unhide
+        unhideButton.addEventListener('click', function() {
+            if (isHidden) {
+                unhideMonths();
+                this.textContent = 'Hide Months';
+            } else {
+                hideMonths();
+                this.textContent = 'Unhide Months';
+            }
         });
+
+        filterDropdown.addEventListener('change', filterStatus);
+        startYearSelect.addEventListener('change', updateEndYearOptions);
+        updateEndYearOptions();
+    });
     </script>
 
 </x-app-layout>
