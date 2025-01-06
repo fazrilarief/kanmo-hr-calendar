@@ -57,7 +57,7 @@
     </style>
     <div class="card my-4">
         <div class="card-header" style="background: #e9500e; color: #ffffff;">
-            Activity Calendar
+            Activity Calendar2
         </div>
         <div class="card-body">
             @php

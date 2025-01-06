@@ -95,7 +95,6 @@
         Route::get('/hr-calendar/list', [AdminHrCalendarController::class, 'index_list'])->name('admin.hr.calendar.index.list');
         Route::post('/hr-calendar/list', [AdminHrCalendarController::class, 'filter'])->name('admin.hr.calendar.filter');
 
-
         Route::get('/hr-calendar/list/add', [AdminHrCalendarController::class, 'add_list'])->name('admin.hr.calendar.add.list');
         Route::post('/hr-calendar/list/store', [AdminHrCalendarController::class, 'store_list'])->name('admin.hr.calendar.store.list');
         Route::get('/hr-calendar/list/edit/{id}', [AdminHrCalendarController::class, 'edit_list'])->name('admin.hr.calendar.edit.list');
