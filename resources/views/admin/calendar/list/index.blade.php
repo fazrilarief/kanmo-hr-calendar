@@ -176,7 +176,7 @@
                                                 $isHighlighted = true;
 
                                                 if ($currentMonth->isCurrentMonth() || $currentMonth->isFuture()) {
-                                                    $statusText = 'Ongoing';
+                                                    $statusText = '';
                                                 } elseif ($currentMonth->isPast()) {
                                                     $statusText = 'Done';
                                                 }
